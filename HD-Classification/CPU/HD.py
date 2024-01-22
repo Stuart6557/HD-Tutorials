@@ -16,6 +16,7 @@ def binarize(base_matrix):
 
 
 """
+Random projection
 Encodes each data point in X_data (2D array) by mulitplying it with base_matrix.
 Prints percentage completed every 20 iterations.
 Binarizes encoding if signed=True.
@@ -34,6 +35,7 @@ def encoding_rp(X_data, base_matrix, signed=False):
 
 
 """
+ID-level encoding
 Encodes each data point in X_data (2D array) with the given variables:
 	lvl_hvs, id_hvs, bin_len, and x_min.
 Prints percentage completed every 20 iterations.
@@ -54,6 +56,7 @@ def encoding_idlv(X_data, lvl_hvs, id_hvs, D, bin_len, x_min, L=64):
 
 
 """
+Permutation encoding
 Encodes each data point in X_data (2D array) with the given variables:
 	lvl_hvs, bin_len, and x_min.
 Prints percentage completed every 20 iterations.
