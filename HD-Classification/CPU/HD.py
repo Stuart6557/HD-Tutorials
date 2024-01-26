@@ -18,12 +18,12 @@ def binarize(base_matrix):
 """
 Random projection
 Encodes each data point in X_data (2D array) by mulitplying it with base_matrix.
-Prints percentage completed every 20 iterations.
 Binarizes encoding if signed=True.
 """
 def encoding_rp(X_data, base_matrix, signed=False):
 	enc_hvs = []
 	for i in range(len(X_data)):
+		# Print percentage completed every 20 iterations
 		if i % int(len(X_data)/20) == 0:
 			sys.stdout.write(str(int(i/len(X_data)*100)) + '% ')
 			sys.stdout.flush()
@@ -38,11 +38,11 @@ def encoding_rp(X_data, base_matrix, signed=False):
 ID-level encoding
 Encodes each data point in X_data (2D array) with the given variables:
 	lvl_hvs, id_hvs, bin_len, and x_min.
-Prints percentage completed every 20 iterations.
 """
 def encoding_idlv(X_data, lvl_hvs, id_hvs, D, bin_len, x_min, L=64):
 	enc_hvs = []
 	for i in range(len(X_data)):
+		# Print percentage completed every 20 iterations
 		if i % int(len(X_data)/20) == 0:
 			sys.stdout.write(str(int(i/len(X_data)*100)) + '% ')
 			sys.stdout.flush()
@@ -59,11 +59,11 @@ def encoding_idlv(X_data, lvl_hvs, id_hvs, D, bin_len, x_min, L=64):
 Permutation encoding
 Encodes each data point in X_data (2D array) with the given variables:
 	lvl_hvs, bin_len, and x_min.
-Prints percentage completed every 20 iterations.
 """
 def encoding_perm(X_data, lvl_hvs, D, bin_len, x_min, L=64):
 	enc_hvs = []
 	for i in range(len(X_data)):
+		# Print percentage completed every 20 iterations
 		if i % int(len(X_data)/20) == 0:
 			sys.stdout.write(str(int(i/len(X_data)*100)) + '% ')
 			sys.stdout.flush()
@@ -114,7 +114,7 @@ def train(X_train, y_train, X_test, y_test, D=500, alg='rp', epoch=20, lr=1.0, L
 		base_matrix = np.random.rand(D, len(X_train[0]))
 		base_matrix = np.where(base_matrix > 0.5, 1, -1)
 		base_matrix = np.array(base_matrix, np.int8)
-		# Encode training data using idlv algorithm
+		# Encode training data using random projection algorithm
 		print('\nEncoding ' + str(len(X_train)) + ' train data')
 		train_enc_hvs = encoding_rp(X_train, base_matrix, signed=(alg == 'rp-sign'))
 		print('\n\nEncoding ' + str(len(X_validation)) + ' validation data')
