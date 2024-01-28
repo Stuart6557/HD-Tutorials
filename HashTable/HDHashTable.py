@@ -39,12 +39,12 @@ class HDHashTable:
     self.encoding_scheme['T'] = T_encoding
 
     print("Print cos similarity between encodings to ensure they're dissimilar enough")
-    print(dot(A_encoding, C_encoding) / (norm(A_encoding) * norm(C_encoding)))
-    print(dot(A_encoding, G_encoding) / (norm(A_encoding) * norm(C_encoding)))
-    print(dot(A_encoding, T_encoding) / (norm(A_encoding) * norm(C_encoding)))
-    print(dot(C_encoding, G_encoding) / (norm(A_encoding) * norm(C_encoding)))
-    print(dot(C_encoding, T_encoding) / (norm(A_encoding) * norm(C_encoding)))
-    print(dot(G_encoding, T_encoding) / (norm(A_encoding) * norm(C_encoding)))
+    print(HDHashTable.cos_sim(A_encoding, C_encoding))
+    print(HDHashTable.cos_sim(A_encoding, G_encoding))
+    print(HDHashTable.cos_sim(A_encoding, T_encoding))
+    print(HDHashTable.cos_sim(C_encoding, G_encoding))
+    print(HDHashTable.cos_sim(C_encoding, T_encoding))
+    print(HDHashTable.cos_sim(G_encoding, T_encoding))
     print()
 
   def encode(self, kmer):
@@ -92,6 +92,9 @@ class HDHashTable:
       Whether or not the k-mer exists in the hash table
     """
     enc_hv = self.encode(kmer)
-    cos_sim = dot(self.hash_table, enc_hv) / (norm(self.hash_table) * norm(enc_hv))
+    cos_sim = HDHashTable.cos_sim(self.hash_table, enc_hv)
     print(f'cos_sim for {kmer} is {cos_sim}')
     return cos_sim > 0.5
+  
+  def cos_sim(vec_1, vec_2):
+    return dot(vec_1, vec_2) / (norm(vec_1) * norm(vec_2))
