@@ -2,4 +2,5 @@
 isolet_choir
 isolet.pickle
 
-25mers.txt
+dataTest.csv
+dataTrain.csv
