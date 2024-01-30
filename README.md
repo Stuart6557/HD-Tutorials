@@ -2,5 +2,5 @@
 
 Original repos
 
-- [Classification](https://github.com/UCSD-SEELab/HD-Classification)
-- [Clustering](https://github.com/UCSD-SEELab/HD-Clustering)
+- [HD-Classification](https://github.com/UCSD-SEELab/HD-Classification)
+- [HD-Clustering](https://github.com/UCSD-SEELab/HD-Clustering)
