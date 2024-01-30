@@ -38,14 +38,14 @@ class HDHashTable:
     self.encoding_scheme['G'] = G_encoding
     self.encoding_scheme['T'] = T_encoding
 
-    # print("Print cos similarity between encodings to ensure they're dissimilar enough")
-    # print(HDHashTable.cos_sim(A_encoding, C_encoding))
-    # print(HDHashTable.cos_sim(A_encoding, G_encoding))
-    # print(HDHashTable.cos_sim(A_encoding, T_encoding))
-    # print(HDHashTable.cos_sim(C_encoding, G_encoding))
-    # print(HDHashTable.cos_sim(C_encoding, T_encoding))
-    # print(HDHashTable.cos_sim(G_encoding, T_encoding))
-    # print()
+    print("Print cos similarity between encodings to ensure they're dissimilar enough")
+    print(f'A and C: {HDHashTable.cos_sim(A_encoding, C_encoding)}')
+    print(f'A and G: {HDHashTable.cos_sim(A_encoding, G_encoding)}')
+    print(f'A and T: {HDHashTable.cos_sim(A_encoding, T_encoding)}')
+    print(f'C and G: {HDHashTable.cos_sim(C_encoding, G_encoding)}')
+    print(f'C and T: {HDHashTable.cos_sim(C_encoding, T_encoding)}')
+    print(f'G and T: {HDHashTable.cos_sim(G_encoding, T_encoding)}')
+    print()
 
   def encode(self, kmer):
     """
