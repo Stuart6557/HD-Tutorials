@@ -15,36 +15,35 @@ class HDHashTable:
     """
     # We don't want the dimension to be too small. Otherwise, there's a higher chance that encoded
     # hypervectors will be too similar to each other. Ideally, they should be nearly orthogonal
-    if D < 10 * k:
+    if D < 100 * k:
       raise ValueError("Please choose a larger D")
 
     self.k = k
+    self.D = D
     self.hash_table = [0] * D
 
-    # Encoding scheme, each encoding should be ceil(D/k) long so the total hypervector has length D
-    # Each encoding will have half its values be -1 and the other half be 1
+    # Encoding scheme: each encoding will have half its values be -1 and the other half be 1
     self.encoding_scheme = {}
-    len_enc = ceil(D/k)
-    A_encoding = [-1] * floor(len_enc/2) + [1] * ceil(len_enc/2)
+    A_encoding = [-1] * floor(D/2) + [1] * ceil(D/2)
     np.random.shuffle(A_encoding)
-    C_encoding = [-1] * floor(len_enc/2) + [1] * ceil(len_enc/2)
+    C_encoding = [-1] * floor(D/2) + [1] * ceil(D/2)
     np.random.shuffle(C_encoding)
-    G_encoding = [-1] * floor(len_enc/2) + [1] * ceil(len_enc/2)
+    G_encoding = [-1] * floor(D/2) + [1] * ceil(D/2)
     np.random.shuffle(G_encoding)
-    T_encoding = [-1] * floor(len_enc/2) + [1] * ceil(len_enc/2)
+    T_encoding = [-1] * floor(D/2) + [1] * ceil(D/2)
     np.random.shuffle(T_encoding)
     self.encoding_scheme['A'] = A_encoding
     self.encoding_scheme['C'] = C_encoding
     self.encoding_scheme['G'] = G_encoding
     self.encoding_scheme['T'] = T_encoding
 
-    print("Print cos similarity between encodings to ensure they're dissimilar enough")
-    print(f'A and C: {HDHashTable.cos_sim(A_encoding, C_encoding)}')
-    print(f'A and G: {HDHashTable.cos_sim(A_encoding, G_encoding)}')
-    print(f'A and T: {HDHashTable.cos_sim(A_encoding, T_encoding)}')
-    print(f'C and G: {HDHashTable.cos_sim(C_encoding, G_encoding)}')
-    print(f'C and T: {HDHashTable.cos_sim(C_encoding, T_encoding)}')
-    print(f'G and T: {HDHashTable.cos_sim(G_encoding, T_encoding)}')
+    print("Print dot product between encodings to ensure they're dissimilar enough")
+    print(f'A and C: {dot(A_encoding, C_encoding)}')
+    print(f'A and G: {dot(A_encoding, G_encoding)}')
+    print(f'A and T: {dot(A_encoding, T_encoding)}')
+    print(f'C and G: {dot(C_encoding, G_encoding)}')
+    print(f'C and T: {dot(C_encoding, T_encoding)}')
+    print(f'G and T: {dot(G_encoding, T_encoding)}')
     print()
 
   def encode(self, kmer):
@@ -61,11 +60,11 @@ class HDHashTable:
     """
     if len(kmer) != self.k:
       raise ValueError(f'k-mer must have length {self.k}')
-    enc_hv = []
+    enc_hv = [1] * self.D
     for i in range(self.k):
       base_enc = self.encoding_scheme[kmer[i]]
-      np.roll(base_enc, i)
-      enc_hv += base_enc
+      base_enc = np.roll(base_enc, i)
+      enc_hv = [a * b for a, b in zip(enc_hv, base_enc)]
     return enc_hv
 
   def add(self, kmer):
@@ -92,9 +91,6 @@ class HDHashTable:
       Whether or not the k-mer exists in the hash table
     """
     enc_hv = self.encode(kmer)
-    cos_sim = HDHashTable.cos_sim(self.hash_table, enc_hv)
-    print(f'cos_sim for {kmer} is {cos_sim}')
-    return cos_sim > 0.5
-  
-  def cos_sim(vec_1, vec_2):
-    return dot(vec_1, vec_2) / (norm(vec_1) * norm(vec_2))
+    dot_prod = dot(self.hash_table, enc_hv)
+    print(f'dot product for {kmer} is {dot_prod}')
+    return dot_prod > self.D / 2

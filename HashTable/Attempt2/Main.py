@@ -4,24 +4,11 @@ from HDHashTable import HDHashTable
 # Generate a new dataset
 subprocess.run(['python3', 'generateData.py'])
 
-# Printing the cos similarity between the first two hash table entries
-# f = open('dataTrain.csv', 'r')
-# kmer1 = f.readline()[:-1]
-# kmer2 = f.readline()[:-1]
-# k = len(kmer1)
-# hash_table = HDHashTable(k=k, D=1000)
-# hash_table.add(kmer1)
-# hash_table.add(kmer2)
-# kmer1_vec = hash_table.encode(kmer1)
-# kmer2_vec = hash_table.encode(kmer2)
-# print(HDHashTable.cos_sim(kmer1_vec, kmer2_vec))
-# f.close()
-
 # Build the hash table
 f = open('dataTrain.csv', 'r')
 kmer = f.readline()[:-1] # We include a [:-1] to ignore the '\n'
 k = len(kmer)
-hash_table = HDHashTable(k=k, D=1000)
+hash_table = HDHashTable(k=k, D=10000)
 while (kmer != ''):
   hash_table.add(kmer)
   kmer = f.readline()[:-1]
