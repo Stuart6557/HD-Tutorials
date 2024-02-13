@@ -8,11 +8,10 @@ import math
 import random
 import numpy as np
 
-
-"""
-Generates a k-mer of length k
-"""
 def generate_kmer(k):
+  """
+  Generates a k-mer of length k
+  """
   DNA_bases = ['A', 'C', 'G', 'T']
   kmer = ''
   for _ in range(k):
@@ -22,34 +21,33 @@ def generate_kmer(k):
 def main():
   num_kmers = 500
   k = 25
-  kmersTrain = set()
+  kmers_train = set()
 
   # Generate num_kmers k-mers for the hash table data
-  fTrain = open('dataTrain.csv', 'w')
+  f_train = open('dataTrain.csv', 'w')
   # Generate num_kmers test data. Half will be in the hash table and half will not
-  fTest = open('dataTest.csv', 'w')
+  f_test = open('dataTest.csv', 'w')
   includeInTestData = [True] * math.floor(num_kmers/2) + [False] * math.ceil(num_kmers/2)
   np.random.shuffle(includeInTestData)
 
   for i in range(num_kmers):
     kmer = generate_kmer(k)
-    kmersTrain.add(kmer)
-    fTrain.write(kmer + '\n')
+    kmers_train.add(kmer)
+    f_train.write(kmer + '\n')
 
     if includeInTestData[i]:
-      fTest.write(kmer + ',T\n')
+      f_test.write(kmer + ',T\n')
 
   # Finish generating test data
   for _ in range(math.ceil(num_kmers/2)):
     kmer = generate_kmer(k)
-    while kmer in kmersTrain:
+    while kmer in kmers_train:
       # Generate a new k-mer until we get one that's not in the hash tabls
       kmer = generate_kmer(k)
-    fTest.write(kmer + ',F\n')
+    f_test.write(kmer + ',F\n')
   
-  fTrain.close()
-  fTest.close()
-
+  f_train.close()
+  f_test.close()
 
 if __name__ == '__main__':
   main()
