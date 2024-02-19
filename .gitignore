@@ -5,4 +5,9 @@ isolet.pickle
 dataTest.csv
 dataTrain.csv
 
+*.fastq
+data_test.csv
+
+model.csv
+
 results.txt
