@@ -22,7 +22,7 @@ def main():
   # Get data_file, D, and k from command input
   parser = argparse.ArgumentParser()
   parser.add_argument('--path', action='store', type=str, help='path to fastq data file', required=True)
-  parser.add_argument('--D', action='store', type=int, default=100000, help='number of dimensions in the encoded hypervector (default is 10000)')
+  parser.add_argument('--D', action='store', type=int, default=10000, help='number of dimensions in the encoded hypervector (default is 10000)')
   parser.add_argument('--k', action='store', type=int, default=501, help='length of a k-mer (should be odd, default is 501)')
   
   inputs = parser.parse_args()
