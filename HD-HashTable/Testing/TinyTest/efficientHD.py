@@ -7,7 +7,7 @@ from math import ceil, floor
 import numpy as np
 from numpy import dot
 
-class HDHashTable:
+class efficientHD:
   def __init__(self, k: int, D: int):
     """
     Constructor that creates a D-dimensional array to store the contents of the hash table

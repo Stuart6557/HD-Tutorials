@@ -2,7 +2,7 @@ from math import ceil, floor
 import numpy as np
 from numpy import dot
 
-class HDHashTable:
+class inefficientHD:
   def __init__(self, k, D):
     """
     Constructor that creates a D-dimensional array to store the contents of the hash table
@@ -14,7 +14,7 @@ class HDHashTable:
     """
     # We don't want the dimension to be too small. Otherwise, there's a higher chance that encoded
     # hypervectors will be too similar to each other. Ideally, they should be nearly orthogonal
-    if D < 100 * k:
+    if D < 10 * k:
       raise ValueError("Please choose a larger D")
 
     self.k = k
@@ -36,14 +36,41 @@ class HDHashTable:
     self.encoding_scheme['G'] = G_encoding
     self.encoding_scheme['T'] = T_encoding
 
-    print("Print dot product between encodings to ensure they're dissimilar enough")
-    print(f'A and C: {dot(A_encoding, C_encoding)}')
-    print(f'A and G: {dot(A_encoding, G_encoding)}')
-    print(f'A and T: {dot(A_encoding, T_encoding)}')
-    print(f'C and G: {dot(C_encoding, G_encoding)}')
-    print(f'C and T: {dot(C_encoding, T_encoding)}')
-    print(f'G and T: {dot(G_encoding, T_encoding)}')
-    print()
+  def set_A_encoding(self, A_encoding: list):
+    """
+    Sets the encoding scheme for base 'A'.
+
+    Parameters:
+      A_encoding (list): The encoding scheme for 'A'
+    """
+    self.encoding_scheme['A'] = A_encoding
+
+  def set_C_encoding(self, C_encoding: list):
+    """
+    Sets the encoding scheme for base 'C'.
+
+    Parameters:
+      C_encoding (list): The encoding scheme for 'C'
+    """
+    self.encoding_scheme['C'] = C_encoding
+
+  def set_G_encoding(self, G_encoding: list):
+    """
+    Sets the encoding scheme for base 'G'.
+
+    Parameters:
+      G_encoding (list): The encoding scheme for 'G'
+    """
+    self.encoding_scheme['G'] = G_encoding
+
+  def set_T_encoding(self, T_encoding: list):
+    """
+    Sets the encoding scheme for base 'T'.
+
+    Parameters:
+      T_encoding (list): The encoding scheme for 'T'
+    """
+    self.encoding_scheme['T'] = T_encoding
 
   def encode(self, kmer):
     """

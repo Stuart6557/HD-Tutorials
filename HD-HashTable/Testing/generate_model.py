@@ -1,5 +1,7 @@
 # This file extracts all k-mers from the reads in a given fastq file and adds them to a hash table.
 # It then saves model to model.csv where each line is one element of the hash table hypervector.
+# 
+# python3 generate_model.py --path small_bacillus.fastq
 
 from HDHashTable import HDHashTable
 import argparse
@@ -20,7 +22,7 @@ def main():
   # Get data_file, D, and k from command input
   parser = argparse.ArgumentParser()
   parser.add_argument('--path', action='store', type=str, help='path to fastq data file', required=True)
-  parser.add_argument('--D', action='store', type=int, default=10000, help='number of dimensions in the encoded hypervector (default is 10000)')
+  parser.add_argument('--D', action='store', type=int, default=100000, help='number of dimensions in the encoded hypervector (default is 10000)')
   parser.add_argument('--k', action='store', type=int, default=501, help='length of a k-mer (should be odd, default is 501)')
   
   inputs = parser.parse_args()
@@ -31,6 +33,7 @@ def main():
   # Initialize hash table
   # Note: k should be odd because this is what LJA requires (see jumbodbg_manual.md)
   hash_table = HDHashTable(k=k, D=D)
+  hash_table.print_base_enc_dot_prods()
 
   # Build the hash table
   f = open(data_train_file, 'r')
@@ -40,7 +43,7 @@ def main():
     # Need to read the next line due to the way fastq files are structured
     # For more information, check out this Illumina page:
     #   https://knowledge.illumina.com/software/general/software-general-reference_material-list/000002211
-    read = f.readline()[:-1] # We include a [:-1] to ignore the '\n'
+    read = f.readline().strip() # We include a .strip() to ignore the trailing '\n'
     print(f'encoding read {i+1}')
     i += 1
 
@@ -56,8 +59,18 @@ def main():
 
   # Save model
   f = open('model.csv', 'w')
-  for entry in hash_table.hash_table:
-    f.write(f'{str(entry)}\n')
+  # First save k and D
+  f.write(f'{hash_table.k}\n')
+  f.write(f'{hash_table.D}\n')
+  # Now the base encodings
+  order_of_bases = ['A', 'C', 'G', 'T']
+  for base in order_of_bases:
+    for val in hash_table.encoding_scheme[base]:
+      f.write(f'{val} ')
+    f.write('\n')
+  # Now save the hash table hypervector
+  for entry in hash_table.hash_table_hv:
+    f.write(f'{str(entry)} ')
   f.close()
 
 if __name__ == '__main__':

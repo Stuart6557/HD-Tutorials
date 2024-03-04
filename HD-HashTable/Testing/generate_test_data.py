@@ -1,4 +1,6 @@
-# ?
+# This file generates numPos k-mers in the given fastq data and numNeg k-mers not in the given data.
+# 
+# python3 generate_test_data.py --path small_bacillus.fastq
 
 import random
 import numpy as np
@@ -7,8 +9,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--path', action='store', type=str, help='path to fastq data file', required=True)
 parser.add_argument('--k', action='store', type=int, default=501, help='length of a k-mer (should be odd, default is 501)')
-parser.add_argument('--numPos', action='store', type=int, default=250, help='number of k-mers in the generated test data that are in the hash table (default 250)')
-parser.add_argument('--numNeg', action='store', type=int, default=250, help='number of k-mers in the generated test data that are not in the hash table (default 250)')
+parser.add_argument('--numPos', action='store', type=int, default=200, help='number of k-mers in the generated test data that are in the hash table (default 200)')
+parser.add_argument('--numNeg', action='store', type=int, default=200, help='number of k-mers in the generated test data that are not in the hash table (default 200)')
 
 inputs = parser.parse_args()
 data_file = inputs.path
@@ -39,10 +41,10 @@ def extract_kmers(data_file, k):
     # Need to read the next line due to the way fastq files are structured
     # For more information, check out this Illumina page:
     #   https://knowledge.illumina.com/software/general/software-general-reference_material-list/000002211
-    read = f.readline()[:-1] # We include a [:-1] to ignore the '\n'
+    read = f.readline().strip() # We include a .strip() to ignore the trailing '\n'
     
     # Extract all k-mers of length k from the read and add them to our hash table
-    for i in range(len(read) - k):
+    for i in range(len(read) - k + 1):
       kmer = read[i:i+k]
       kmers.append(kmer)
       num_kmers += 1

@@ -1,4 +1,6 @@
 # This file calculates and prints the accuracy of a given HDC model on a given test dataset.
+# 
+# python3 test_model.py --modelPath model.csv --testDataPath data_test.csv
 
 import argparse
 from HDHashTable import HDHashTable
@@ -12,23 +14,17 @@ model_path = inputs.modelPath
 test_data_path = inputs.testDataPath
 
 # Build the model
-set_hash_table_hv = []
 f = open(model_path, 'r')
-val = f.readline()
-while val != '':
-  val = int(val[:-1]) # Need [:-1] to exclude the last newline character
-  set_hash_table_hv.append(val)
-  val = f.readline()
-D = len(set_hash_table_hv)
-f.close()
-
-# Get the length of a k-mer
-f = open(test_data_path, 'r')
-kmer = f.readline().split(',')[0]
-k = len(kmer)
-
+k = int(f.readline().strip()) # Need .strip() to exclude the trailing '\n'
+D = int(f.readline().strip())
 hash_table = HDHashTable(k=k, D=D)
-hash_table.set_hash_table_hv(set_hash_table_hv)
+hash_table.set_A_encoding([int(x) for x in f.readline().strip().split(' ')])
+hash_table.set_C_encoding([int(x) for x in f.readline().strip().split(' ')])
+hash_table.set_G_encoding([int(x) for x in f.readline().strip().split(' ')])
+hash_table.set_T_encoding([int(x) for x in f.readline().strip().split(' ')])
+hash_table.set_hash_table_hv([int(x) for x in f.readline().strip().split(' ')])
+f.close()
+hash_table.print_base_enc_dot_prods()
 
 # Testing
 true_pos = 0
@@ -36,7 +32,7 @@ true_neg = 0
 total_pos = 0
 total_neg = 0
 
-f.seek(0) # Go back to the top of the file
+f = open(test_data_path, 'r')
 data = f.readline()
 while data != '':
   data = data.split(',')
