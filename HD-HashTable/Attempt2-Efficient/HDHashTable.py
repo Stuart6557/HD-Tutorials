@@ -10,7 +10,8 @@ from numpy import dot
 class HDHashTable:
   def __init__(self, k: int, D: int):
     """
-    Constructor that creates a D-dimensional array to store the contents of the hash table
+    Constructor that creates an array of D-dimensional arrays to store the contents of the hash table
+    To improve accuracy and scalability, each read will be represented by its own hypervector
     Creates an encoding scheme for each of the 4 bases: A, C, G, and T
 
     Parameters:
@@ -24,7 +25,7 @@ class HDHashTable:
 
     self.k = k
     self.D = D
-    self.hash_table_hv = [0] * D
+    self.hash_table_hvs = [0] * D
 
     # Encoding scheme: each encoding will have half its values be -1 and the other half be 1
     self.encoding_scheme = {}
