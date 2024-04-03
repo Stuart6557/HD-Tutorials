@@ -1,5 +1,5 @@
 # Most of this is copied verbatim from ../Attempt2-Testing/HDHashTable
-# The difference is that we have a different hypervector for every 1000 k-mers rather than a single
+# The difference is that we have a different hypervector for every 400 k-mers rather than a single
 # hypervector for the entire hash table. This allows us to maintain a low dimension of D=10000
 # without compromising accuracy.
 
@@ -25,7 +25,7 @@ class HDHashTable:
 
     self.k = k
     self.D = D
-    self.hash_table_hvs = []
+    self.hash_table_hvs = [[1] * self.D]
     self.kmers_in_last_hv = 0
 
     # Encoding scheme: each encoding will have half its values be -1 and the other half be 1
@@ -107,11 +107,12 @@ class HDHashTable:
     Parameters:
       enc_kmer: hypervector representation of the k-mer being added
     """
-    if self.kmers_in_last_hv >= 1000:
+    if self.kmers_in_last_hv >= 400:
       self.hash_table_hvs.append(enc_kmer)
       self.kmers_in_last_hv = 1
     else:
-      self.hash_table_hvs[-1] = [sum(x) for x in zip(self.hash_table_hvs[-1], enc_kmer)]
+      # self.hash_table_hvs[-1] = [sum(x) for x in zip(self.hash_table_hvs[-1], enc_kmer)]
+      self.hash_table_hvs[-1] = [a * b for a, b in zip(self.hash_table_hvs[-1], enc_kmer)]
       self.kmers_in_last_hv += 1
 
   def add_read(self, read: str):
@@ -144,7 +145,7 @@ class HDHashTable:
     """
     Returns whether or not the given k-mer is in our hash table
     If the dot product of the encoded k-mer with any of the HVs is greater than the
-    threshold of 0.9 * D, return True. Otherwise, return false.
+    threshold of 0.8 * D, return True. Otherwise, return false.
 
     Parameters:
       kmer (str): The k-mer we are querying
@@ -158,9 +159,9 @@ class HDHashTable:
       dot_prod = dot(read_hv, enc_hv)
       if dot_prod > largest_dot_prod:
         largest_dot_prod = dot_prod
-      if dot_prod > 0.9 * self.D:
+      if dot_prod > 0.8 * self.D:
         # Early Search Termination (EST)
-        print(f'dot product for {kmer} is {dot_prod}')
+        # print(f'dot product for {kmer} is {dot_prod}')
         return True
     print(f'largest dot product for {kmer} is {largest_dot_prod}')
     return False

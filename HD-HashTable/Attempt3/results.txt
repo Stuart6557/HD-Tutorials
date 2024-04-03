@@ -29,3 +29,25 @@ Correctly identified 181 / 200 501-mers that were not in the hash table
 Accuracy: 90.50%
 
 Total Accuracy: 78.00%
+
+
+Each 500 501-mers is represented by a HV, threshold 0.8 * D
+
+Correctly identified 166 / 200 501-mers that were in the hash table
+Accuracy: 83.00%
+
+Correctly identified 200 / 200 501-mers that were not in the hash table
+Accuracy: 100.00%
+
+Total Accuracy: 91.50%
+
+
+Each 400 501-mers is represented by a HV, threshold 0.8 * D
+
+Correctly identified 172 / 200 501-mers that were in the hash table
+Accuracy: 86.00%
+
+Correctly identified 200 / 200 501-mers that were not in the hash table
+Accuracy: 100.00%
+
+Total Accuracy: 93.00%
