@@ -7,7 +7,7 @@ from math import ceil, floor
 import numpy as np
 from numpy import dot
 
-class HDHashTable:
+class efficientHD:
   def __init__(self, k: int, D: int):
     """
     Constructor that creates a D-dimensional array to store the contents of the hash table
@@ -41,15 +41,6 @@ class HDHashTable:
     self.encoding_scheme['G'] = G_encoding
     self.encoding_scheme['T'] = T_encoding
 
-    print("Print dot product between encodings to ensure they're dissimilar enough")
-    print(f'A and C: {dot(A_encoding, C_encoding)}')
-    print(f'A and G: {dot(A_encoding, G_encoding)}')
-    print(f'A and T: {dot(A_encoding, T_encoding)}')
-    print(f'C and G: {dot(C_encoding, G_encoding)}')
-    print(f'C and T: {dot(C_encoding, T_encoding)}')
-    print(f'G and T: {dot(G_encoding, T_encoding)}')
-    print()
-
   def set_hash_table_hv(self, hash_table_hv: list):
     """
     Sets the hash table hypervector to the given hypervector.
@@ -58,6 +49,42 @@ class HDHashTable:
       hash_table_hv (list): The hypervector representation of the hash table
     """
     self.hash_table_hv = hash_table_hv
+  
+  def set_A_encoding(self, A_encoding: list):
+    """
+    Sets the encoding scheme for base 'A'.
+
+    Parameters:
+      A_encoding (list): The encoding scheme for 'A'
+    """
+    self.encoding_scheme['A'] = A_encoding
+
+  def set_C_encoding(self, C_encoding: list):
+    """
+    Sets the encoding scheme for base 'C'.
+
+    Parameters:
+      C_encoding (list): The encoding scheme for 'C'
+    """
+    self.encoding_scheme['C'] = C_encoding
+
+  def set_G_encoding(self, G_encoding: list):
+    """
+    Sets the encoding scheme for base 'G'.
+
+    Parameters:
+      G_encoding (list): The encoding scheme for 'G'
+    """
+    self.encoding_scheme['G'] = G_encoding
+
+  def set_T_encoding(self, T_encoding: list):
+    """
+    Sets the encoding scheme for base 'T'.
+
+    Parameters:
+      T_encoding (list): The encoding scheme for 'T'
+    """
+    self.encoding_scheme['T'] = T_encoding
 
   def encode(self, kmer: str):
     """
@@ -88,20 +115,22 @@ class HDHashTable:
       read (str): The read whose k-mers we are adding to the hash table
     """
     if len(read) < self.k:
-      raise ValueError(f'read must have length {self.k}')
+      raise ValueError(f'read must have length >= {self.k}')
     kmer = read[:self.k]
     first_base_in_kmer = kmer[0]
     kmer_enc = self.encode(kmer)
+    self.hash_table_hv = [sum(x) for x in zip(self.hash_table_hv, kmer_enc)]
 
     # Use sliding window technique from GenieHD
     for i in range(self.k, len(read)):
       first_base_enc = self.encoding_scheme[first_base_in_kmer]
       kmer_enc = [a * b for a, b in zip(kmer_enc, first_base_enc)]
-      kmer_enc = np.roll(kmer_enc, 1)
+      kmer_enc = np.roll(kmer_enc, -1)
       last_base_enc = self.encoding_scheme[read[i]]
       last_base_enc = np.roll(last_base_enc, self.k - 1)
       kmer_enc = [a * b for a, b in zip(kmer_enc, last_base_enc)]
       self.hash_table_hv = [sum(x) for x in zip(self.hash_table_hv, kmer_enc)]
+      first_base_in_kmer = read[i - self.k + 1]
 
   def query(self, kmer: str):
     """
@@ -117,3 +146,16 @@ class HDHashTable:
     dot_prod = dot(self.hash_table_hv, enc_hv)
     print(f'dot product for {kmer} is {dot_prod}')
     return dot_prod > self.D / 2
+  
+  def print_base_enc_dot_prods(self):
+    """
+    Prints the dot product between all pairs of base encodings.
+    """
+    print("Print dot product between base encodings to ensure they're dissimilar enough")
+    print(f"A and C: {dot(self.encoding_scheme['A'], self.encoding_scheme['C'])}")
+    print(f"A and G: {dot(self.encoding_scheme['A'], self.encoding_scheme['G'])}")
+    print(f"A and T: {dot(self.encoding_scheme['A'], self.encoding_scheme['T'])}")
+    print(f"C and G: {dot(self.encoding_scheme['C'], self.encoding_scheme['G'])}")
+    print(f"C and T: {dot(self.encoding_scheme['C'], self.encoding_scheme['T'])}")
+    print(f"G and T: {dot(self.encoding_scheme['G'], self.encoding_scheme['T'])}")
+    print()

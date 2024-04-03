@@ -2,12 +2,14 @@
 isolet_choir
 isolet.pickle
 
-dataTest.csv
-dataTrain.csv
+# dataTest.csv
+# dataTrain.csv
 
-*.fastq
-data_test.csv
+# *.fastq
+# data_test.csv
 
-model.csv
+# model.csv
+# efficient.csv
+# inefficient.csv
 
-results.txt
+# results.txt

@@ -1,4 +1,4 @@
-# This code extracts all k-mers from a fastq data file and appends them to a list named kmers
+# This code extracts and prints all k-mers from a fastq data file
 
 import argparse
 
@@ -33,3 +33,4 @@ f.close()
 
 for kmer in kmers:
   print(kmer)
+  
