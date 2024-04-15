@@ -1,5 +1,5 @@
 # Most of this is copied verbatim from ../Attempt2-Testing/HDHashTable
-# The difference is that we have a different hypervector for every 400 k-mers rather than a single
+# The difference is that we have a different hypervector for every 500 k-mers rather than a single
 # hypervector for the entire hash table. This allows us to maintain a low dimension of D=10000
 # without compromising accuracy.
 
@@ -107,7 +107,7 @@ class HDHashTable:
     Parameters:
       enc_kmer: hypervector representation of the k-mer being added
     """
-    if self.kmers_in_last_hv >= 400:
+    if self.kmers_in_last_hv >= 500:
       self.hash_table_hvs.append(enc_kmer)
       self.kmers_in_last_hv = 1
     else:

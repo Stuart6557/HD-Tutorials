@@ -1,0 +1,62 @@
+Old experiments
+Invalid because I only used 2 Bacillus reads but I should be using a larger dataset
+
+
+1000 501-mers per HV
+
+Correctly identified 154 / 200 501-mers that were in the hash table
+Accuracy: 77.00%
+
+Correctly identified 173 / 200 501-mers that were not in the hash table
+Accuracy: 86.50%
+
+Total Accuracy: 81.75%
+
+
+800 501-mers per HV
+
+Correctly identified 155 / 200 501-mers that were in the hash table
+Accuracy: 77.50%
+
+Correctly identified 185 / 200 501-mers that were not in the hash table
+Accuracy: 92.50%
+
+Total Accuracy: 85.00%
+
+
+600 501-mers per HV
+
+Correctly identified 159 / 200 501-mers that were in the hash table
+Accuracy: 79.50%
+
+Correctly identified 197 / 200 501-mers that were not in the hash table
+Accuracy: 98.50%
+
+Total Accuracy: 89.00%
+
+
+400 501-mers per HV
+
+Correctly identified 178 / 200 501-mers that were in the hash table
+Accuracy: 89.00%
+
+Correctly identified 200 / 200 501-mers that were not in the hash table
+Accuracy: 100.00%
+
+Total Accuracy: 94.50%
+
+
+200 501-mers per HV
+
+Correctly identified 188 / 200 501-mers that were in the hash table
+Accuracy: 94.00%
+
+Correctly identified 200 / 200 501-mers that were not in the hash table
+Accuracy: 100.00%
+
+Total Accuracy: 97.00%
+
+
+1 501-mers per HV
+
+?

@@ -1,0 +1,76 @@
+First 30 reads
+Hash table hypervector for every 500 k-mers
+
+Trying on server
+Broadcast message from systemd-journald@zmac (Mon 2024-04-15 00:55:13 PDT):
+
+systemd[1]: Caught <SEGV>, dumped core as pid 16143.
+
+
+Broadcast message from systemd-journald@zmac (Mon 2024-04-15 00:55:13 PDT):
+
+systemd[1]: Freezing execution.
+
+encoding read 30
+
+real	116m4.225s
+user	116m3.413s
+sys	0m0.808s
+
+Generating model
+python3 generate_model.py --path bacillus-SRR26664315.fastq --reads 30  1337.63s user 10.27s system 98% cpu 22:41.73 total
+
+Testing
+Correctly identified 158 / 180 501-mers that were in the hash table
+Accuracy: 87.78%
+
+Correctly identified 177 / 200 501-mers that were not in the hash table
+Accuracy: 88.50%
+
+Total Accuracy: 88.16%
+python3 test_model.py --modelPath model.csv --testDataPath data_test.csv  443.70s user 5.18s system 97% cpu 7:39.17 total
+
+
+
+First 40 reads
+Hash table hypervector for every 500 k-mers
+
+Generating model
+python3 generate_model.py --path bacillus-SRR26664315.fastq --reads 40  1801.06s user 16.12s system 97% cpu 31:12.40 total
+
+Testing
+Correctly identified 168 / 200 501-mers that were in the hash table
+Accuracy: 84.00%
+
+Correctly identified 175 / 200 501-mers that were not in the hash table
+Accuracy: 87.50%
+
+Total Accuracy: 85.75%
+python3 test_model.py --modelPath model.csv --testDataPath data_test.csv  506.10s user 3.14s system 100% cpu 8:29.14 total
+
+
+
+First 50 reads
+Hash table hypervector for every 500 k-mers
+
+Generating model
+python3 generate_model.py --path bacillus-SRR26664315.fastq --reads 50  2201.16s user 18.89s system 97% cpu 37:58.00 total
+
+Testing
+Correctly identified 171 / 200 501-mers that were in the hash table
+Accuracy: 85.50%
+
+Correctly identified 172 / 200 501-mers that were not in the hash table
+Accuracy: 86.00%
+
+Total Accuracy: 85.75%
+python3 test_model.py --modelPath model.csv --testDataPath data_test.csv  571.88s user 8.79s system 97% cpu 9:53.57 total
+
+
+
+First 100 reads
+Hash table hypervector for every 500 k-mers
+
+Generating model
+
+Testing
