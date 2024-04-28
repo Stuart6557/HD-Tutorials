@@ -20,8 +20,8 @@ class HDHashTable:
     """
     # We don't want the dimension to be too small. Otherwise, there's a higher chance that encoded
     # hypervectors will be too similar to each other. Ideally, they should be nearly orthogonal
-    if D < 10 * k:
-      raise ValueError("Please choose a larger D")
+    # if D < 10 * k:
+    #   raise ValueError("Please choose a larger D")
 
     self.k = k
     self.D = D
