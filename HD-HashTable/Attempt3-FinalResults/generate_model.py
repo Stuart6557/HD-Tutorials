@@ -1,9 +1,9 @@
-# This file extracts all k-mers from the reads in a given fastq file and adds them to a hash table.
-# It then saves model to model.csv where each line is one element of the hash table hypervector.
+# This file extracts all k-mers from the reads in a given fastq file and adds them to a bloom filter.
+# It then saves model to model.csv where each line is one element of the bloom filter hypervector.
 # 
 # python3 generate_model.py --path bacillus-SRR26664315.fastq --reads 30
 
-from HDHashTable import HDHashTable
+from HDBloomFilter import HDBloomFilter
 import argparse
 import random
 
@@ -32,12 +32,12 @@ def main():
   D = inputs.D
   k = inputs.k
 
-  # Initialize hash table
+  # Initialize able
   # Note: k should be odd because this is what LJA requires (see jumbodbg_manual.md)
-  hash_table = HDHashTable(k=k, D=D)
-  hash_table.print_base_enc_dot_prods()
+  bloom_filter = HDBloomFilter(k=k, D=D)
+  bloom_filter.print_base_enc_dot_prods()
 
-  # Build the hash table
+  # Build the bloom filter
   f = open(data_train_file, 'r')
   read = f.readline()
   for i in range(reads):
@@ -47,8 +47,8 @@ def main():
     read = f.readline().strip() # We include a .strip() to ignore the trailing '\n'
     print(f'encoding read {i+1}')
 
-    # Extract all k-mers of length k from the read and add them to our hash table
-    hash_table.add_read(read)
+    # Extract all k-mers of length k from the read and add them to our bloom filter
+    bloom_filter.add_read(read)
 
     # Need to read in 3 more lines due to the fastq file format
     read = f.readline()
@@ -60,17 +60,17 @@ def main():
   # Save model
   f = open('model.csv', 'w')
   # First save k and D
-  f.write(f'{hash_table.k}\n')
-  f.write(f'{hash_table.D}\n')
+  f.write(f'{bloom_filter.k}\n')
+  f.write(f'{bloom_filter.D}\n')
   # Now the base encodings
   order_of_bases = ['A', 'C', 'G', 'T']
   for base in order_of_bases:
-    for val in hash_table.encoding_scheme[base]:
+    for val in bloom_filter.encoding_scheme[base]:
       f.write(f'{val} ')
     f.write('\n')
-  # Now save the hash table hypervectors
-  for hash_table_hv in hash_table.hash_table_hvs:
-    for entry in hash_table_hv:
+  # Now save the bloom filter hypervectors
+  for bloom_filter_hv in bloom_filter.bloom_filter_hvs:
+    for entry in bloom_filter_hv:
       f.write(f'{str(entry)} ')
     f.write('\n')
   f.close()

@@ -1,6 +1,7 @@
 # Most of this is copied verbatim from ../Attempt2-Testing/HDHashTable
-# The difference is that we have a different hypervector for every 500 k-mers rather than a single
-# hypervector for the entire hash table. This allows us to maintain a low dimension of D=10000
+# Renamed hash table to bloom filter for a more accurate description
+# We also have a different hypervector for every 500 k-mers rather than a single
+# hypervector for the entire bloom filter. This allows us to maintain a low dimension of D=10000
 # without compromising accuracy.
 
 from math import ceil, floor
@@ -8,14 +9,14 @@ import numpy as np
 from numpy import dot
 from numpy.linalg import norm
 
-class HDHashTable:
+class HDBloomFilter:
   def __init__(self, k: int, D: int):
     """
-    Constructor that creates an array of D-dimensional arrays to store the contents of the hash table
+    Constructor that creates an array of D-dimensional arrays to store the contents of the bloom filter
     Creates an encoding scheme for each of the 4 bases: A, C, G, and T
 
     Parameters:
-      k (int): The length k of a k-mer. All k-mers in the hash table should have the same length
+      k (int): The length k of a k-mer. All k-mers in the bloom filter should have the same length
       D (int): The dimension of a hypervector
     """
     # We don't want the dimension to be too small. Otherwise, there's a higher chance that encoded
@@ -25,7 +26,7 @@ class HDHashTable:
 
     self.k = k
     self.D = D
-    self.hash_table_hvs = [[1] * self.D]
+    self.bloom_filter_hvs = [[1] * self.D]
     self.kmers_in_last_hv = 0
 
     # Encoding scheme: each encoding will have half its values be -1 and the other half be 1
@@ -37,12 +38,12 @@ class HDHashTable:
 
   def add_hv(self, read_hv: list):
     """
-    Adds the HV representation of a read to the list of hash table HVs.
+    Adds the HV representation of a read to the list of bloom filter HVs.
 
     Parameters:
-      read_hv (list): The hypervector representation of a read whose k-mers are in the hash table
+      read_hv (list): The hypervector representation of a read whose k-mers are in the bloom filter
     """
-    self.hash_table_hvs.append(read_hv)
+    self.bloom_filter_hvs.append(read_hv)
   
   def set_A_encoding(self, A_encoding: list):
     """
@@ -102,25 +103,25 @@ class HDHashTable:
   
   def add_enc_kmer(self, enc_kmer: list):
     """
-    Adds an encoded k-mer to the hash table.
+    Adds an encoded k-mer to the bloom filter.
 
     Parameters:
       enc_kmer: hypervector representation of the k-mer being added
     """
     if self.kmers_in_last_hv >= 500:
-      self.hash_table_hvs.append(enc_kmer)
+      self.bloom_filter_hvs.append(enc_kmer)
       self.kmers_in_last_hv = 1
     else:
-      self.hash_table_hvs[-1] = [sum(x) for x in zip(self.hash_table_hvs[-1], enc_kmer)]
+      self.bloom_filter_hvs[-1] = [sum(x) for x in zip(self.bloom_filter_hvs[-1], enc_kmer)]
       self.kmers_in_last_hv += 1
 
   def add_read(self, read: str):
     """
-    Adds all the kemrs from a given read to our hash table. Since there's no way of knowing if kmers
-    already exist in the hash table, we will add them again if there are duplicates.
+    Adds all the kemrs from a given read to our bloom filter. Since there's no way of knowing if kmers
+    already exist in the bloom filter, we will add them again if there are duplicates.
 
     Parameters:
-      read (str): The read whose k-mers we are adding to the hash table
+      read (str): The read whose k-mers we are adding to the bloom filter
     """
     if len(read) < self.k:
       raise ValueError(f'read must have length >= {self.k}')
@@ -142,7 +143,7 @@ class HDHashTable:
 
   def query(self, kmer: str):
     """
-    Returns whether or not the given k-mer is in our hash table
+    Returns whether or not the given k-mer is in our bloom filter
     If the dot product of the encoded k-mer with any of the HVs is greater than the
     threshold of 0.8 * D, return True. Otherwise, return false.
 
@@ -150,11 +151,11 @@ class HDHashTable:
       kmer (str): The k-mer we are querying
 
     Returns:
-      Whether or not the k-mer exists in the hash table
+      Whether or not the k-mer exists in the bloom filter
     """
     enc_hv = self.encode(kmer)
     largest_dot_prod = 0
-    for read_hv in self.hash_table_hvs:
+    for read_hv in self.bloom_filter_hvs:
       dot_prod = dot(read_hv, enc_hv)
       if dot_prod > largest_dot_prod:
         largest_dot_prod = dot_prod
@@ -167,7 +168,7 @@ class HDHashTable:
   
   def max_dot_prod(self, kmer: str):
     """
-    Returns the largest dot product of the encoded k-mer with any of the hash table HVs
+    Returns the largest dot product of the encoded k-mer with any of the bloom filter HVs
 
     Parameters:
       kmer (str): The k-mer we are querying
@@ -177,7 +178,7 @@ class HDHashTable:
     """
     enc_hv = self.encode(kmer)
     largest_dot_prod = 0
-    for read_hv in self.hash_table_hvs:
+    for read_hv in self.bloom_filter_hvs:
       dot_prod = dot(read_hv, enc_hv)
       if dot_prod > largest_dot_prod:
         largest_dot_prod = dot_prod
@@ -185,7 +186,7 @@ class HDHashTable:
   
   def max_cos_sim(self, kmer: str):
     """
-    Returns the largest cosine similarity of the encoded k-mer with any of the hash table HVs
+    Returns the largest cosine similarity of the encoded k-mer with any of the bloom filter HVs
 
     Parameters:
       kmer (str): The k-mer we are querying
@@ -195,7 +196,7 @@ class HDHashTable:
     """
     enc_hv = self.encode(kmer)
     largest_cos_sim = -1
-    for read_hv in self.hash_table_hvs:
+    for read_hv in self.bloom_filter_hvs:
       cos_sim = dot(read_hv, enc_hv) / (norm(read_hv) * 100) # norm(enc_hv) = 1
       if cos_sim > largest_cos_sim:
         largest_cos_sim = cos_sim
